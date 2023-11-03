@@ -55,16 +55,16 @@
                 <a class="logo d-flex align-items-center">
                     <img src="{{ url_for('static',filename='custom/logo.png')
                         }}" alt="">
-                    <span>MediWise</span>
+                    <span>&nbsp;MediWise</span>
                 </a>
 
                 <nav id="navbar" class="navbar">
                     <ul>
-                        <li><a class="nav-link scrollto" href="#hero">Home</a></li>
+                        <li><a class="nav-link scrollto" href="/user">Home</a></li>
                         <li><a class="nav-link scrollto" href="#about">BMI</a></li>
                         <li><a class="nav-link scrollto" href="#features">Features</a></li>
                         <li><a class="nav-link scrollto" href="#team">Team</a></li>
-                        <li><a class="getstarted scrollto" >Login Module</a></li>
+                        <li><a class="getstarted scrollto" href="login">Logout</a></li>
                     </ul>
                     <i class="bi bi-list mobile-nav-toggle"></i>
                 </nav>
@@ -117,7 +117,7 @@
                 // Call the function to update the links
                 updateNavigationLinks();
             </script>
-            
+
         <!-- Main JS File -->
         <script src="{{ url_for('static',filename='js/main.js') }}"></script>
     </body>

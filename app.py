@@ -287,7 +287,7 @@ def chat_msg():
     user_message = request.args["message"].lower()
     sessionId = request.args["sessionId"]
 
-    rand_num = random.randint(0,1)
+    rand_num = random.randint(0,4)
     response = []
     if request.args["message"]=="undefined":
 
@@ -320,12 +320,139 @@ def chat_msg():
                 else:
                     all_result['age'] = float(result[0])
                     username = all_result['name']
+                    response.append(username+", Choose Option ?")            
+                    response.append("1. Predict Disease")
+                    response.append("2. Check Disease Symtoms")
                     userSession[sessionId] = userSession.get(sessionId) +1
 
+        if currentState==2:
+
+            if '2' in user_message.lower() or 'check' in user_message.lower():
+                username = all_result['name']
+                response.append(username+", What's Disease Name?")
+                userSession[sessionId] = 20
+            else:
+
+                username = all_result['name']
+                response.append(username+", What symptoms are you experiencing?")         
+                response.append('<a href="/diseases" target="_blank">Symptoms List</a>')   
+                userSession[sessionId] = userSession.get(sessionId) +1
+
+        if currentState==3:
+
+            
+            all_result['symptoms'].extend(user_message.split(","))
+            username = all_result['name']
+            response.append(username+", What kind of symptoms are you currently experiencing?")            
+            response.append("1. Check Disease")   
+            response.append('<a href="/diseases" target="_blank">Symptoms List</a>')   
+            userSession[sessionId] = userSession.get(sessionId) +1
+
+
+        if currentState==4:
+
+            if '1' in user_message or 'disease' in user_message:
+                disease,type = predict_disease_from_symptom(all_result['symptoms'])  
+                response.append("<b>The following disease may be causing your discomfort</b>")
+                response.append(disease)
+                response.append(f'<a href="https://www.google.com/search?q={type} disease hospital near me" target="_blank">Search Near By Hospitals</a>')   
+                userSession[sessionId] = 10
+
+            else:
+
+                all_result['symptoms'].extend(user_message.split(","))
+                username = all_result['name']
+                response.append(username+", Could you describe the symptoms you're suffering from?")            
+                response.append("1. Check Disease")   
+                response.append('<a href="/diseases" target="_blank">Symptoms List</a>')   
+                userSession[sessionId] = userSession.get(sessionId) +1
+
+    
+        if currentState==5:
+            if '1' in user_message or 'disease' in user_message:
+                disease,type = predict_disease_from_symptom(all_result['symptoms'])  
+                response.append("<b>The following disease may be causing your discomfort</b>")
+                response.append(disease)
+                response.append(f'<a href="https://www.google.com/search?q={type} disease hospital near me" target="_blank">Search Near By Hospitals</a>')   
+
+                userSession[sessionId] = 10
+
+            else:
+
+                all_result['symptoms'].extend(user_message.split(","))
+                username = all_result['name']
+                response.append(username+", What are the symptoms that you're currently dealing with?")            
+                response.append("1. Check Disease")   
+                response.append('<a href="/diseases" target="_blank">Symptoms List</a>')   
+                userSession[sessionId] = userSession.get(sessionId) +1
+
+        if currentState==6:    
+
+            if '1' in user_message or 'disease' in user_message:
+                disease,type = predict_disease_from_symptom(all_result['symptoms'])  
+                response.append("The following disease may be causing your discomfort")
+                response.append(disease)
+                response.append(f'<a href="https://www.google.com/search?q={type} disease hospital near me" target="_blank">Search Near By Hospitals</a>')   
+                userSession[sessionId] = 10
+            else:
+                all_result['symptoms'].extend(user_message.split(","))
+                username = all_result['name']
+                response.append(username+", What symptoms have you been experiencing lately?")            
+                response.append("1. Check Disease")   
+                response.append('<a href="/diseases" target="_blank">Symptoms List</a>')   
+                userSession[sessionId] = userSession.get(sessionId) +1
+
+        if currentState==7:
+            if '1' in user_message or 'disease' in user_message:
+                disease,type = predict_disease_from_symptom(all_result['symptoms'])  
+                response.append("<b>The following disease may be causing your discomfort</b>")
+                response.append(disease)
+                response.append(f'<a href="https://www.google.com/search?q={type} disease hospital near me" target="_blank">Search Near By Hospitals</a>')   
+                userSession[sessionId] = 10
+            else:
+                all_result['symptoms'].extend(user_message.split(","))
+                username = all_result['name']
+                response.append(username+", What are the symptoms that you're currently dealing with?")            
+                response.append("1. Check Disease")   
+                response.append('<a href="/diseases" target="_blank">Symptoms List</a>')   
+                userSession[sessionId] = userSession.get(sessionId) +1
+
+
+        if currentState==8:    
+
+            if '1' in user_message or 'disease' in user_message:
+                disease,type = predict_disease_from_symptom(all_result['symptoms'])  
+                response.append("The following disease may be causing your discomfort")
+                response.append(disease)
+                response.append(f'<a href="https://www.google.com/search?q={type} disease hospital near me" target="_blank">Search Near By Hospitals</a>')   
+                userSession[sessionId] = 10
+            else:
+                all_result['symptoms'].extend(user_message.split(","))
+                username = all_result['name']
+                response.append(username+", What symptoms have you been experiencing lately?")            
+                response.append("1. Check Disease")   
+                response.append('<a href="/diseases" target="_blank">Symptoms List</a>')   
+                userSession[sessionId] = userSession.get(sessionId) +1
+
+        if currentState==10:
+            response.append('<a href="/user" target="_blank">Predict Again</a>')   
+
         
+        if currentState==20:
+
+            result,data = get_symtoms(user_message)
+            if result:
+                response.append(f"The symptoms of {user_message} are")
+                for sym in data:
+                    if sym.lower() != user_message.lower():
+                        response.append(sym.capitalize())
+
+            else:response.append(data)
 
             userSession[sessionId] = 2
-            response.append("")
+            response.append("Choose Option ?")            
+            response.append("1. Predict Disease")
+            response.append("2. Check Disease Symtoms")
 
 
 
